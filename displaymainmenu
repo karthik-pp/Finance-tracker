@@ -1,0 +1,107 @@
+private void displayMainMenu() {
+        System.out.println("\n--- Main Menu ---");
+        System.out.println("1. Financial Map");
+        System.out.println("2. Input / Insert Transactions");
+        System.out.println("3. Exit");
+        System.out.print("Please enter your choice: ");
+    }
+
+    private void displayFinancialMap() {
+        System.out.println("\n--- Financial Map ---");
+        System.out.println("Choose time period:");
+        System.out.println("1. Daily");
+        System.out.println("2. Weekly");
+        System.out.println("3. Monthly");
+        System.out.println("4. Yearly");
+        System.out.print("Please enter your choice: ");
+
+        scanner.nextLine();
+        
+        System.out.println("\n--- Summary for selected period ---");
+        double totalCredits = 0;
+        double totalDebits = 0;
+
+        for (Transaction t : getTransactions()) {
+            if (t.getType().equals("Credit")) {
+                totalCredits += t.getAmount();
+            } else {
+                totalDebits += t.getAmount();
+            }
+        }
+
+        System.out.println("Total Credits: $" + String.format("%.2f", totalCredits));
+        System.out.println("Total Debits: $" + String.format("%.2f", Math.abs(totalDebits)));
+        System.out.println("Net Balance: $" + String.format("%.2f", (totalCredits + totalDebits)));
+
+        System.out.println("\n--- Transactions ---");
+        getTransactions().forEach(System.out::println);
+        
+        System.out.println("\n");
+        System.out.println("----------------------------------------------");
+    }
+
+    private void handleTransactionInput() {
+        System.out.println("\n--- Input / Insert Transactions ---");
+        System.out.println("1. Manual Entry");
+        System.out.println("2. Upload PDF (Simulated)");
+        System.out.print("Please enter your choice: ");
+        
+        String inputChoice = scanner.nextLine();
+        switch (inputChoice) {
+            case "1":
+                manualEntry();
+                break;
+            case "2":
+                simulatePdfUpload();
+                break;
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
+    private void manualEntry() {
+        System.out.println("\n--- Manual Entry ---");
+        LocalDate date = null;
+        while (date == null) {
+            System.out.print("Enter transaction date (YYYY-MM-DD): ");
+            try {
+                date = LocalDate.parse(scanner.nextLine());
+            } catch (DateTimeParseException e) {
+                System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+            }
+        }
+
+        String type = "";
+        double amount = 0;
+        while (!type.equals("Credit") && !type.equals("Debit")) {
+            System.out.print("Is this a Debit or Credit? ");
+            String input = scanner.nextLine();
+            if (input.equalsIgnoreCase("Debit")) {
+                type = "Debit";
+                System.out.print("Enter amount: ");
+                amount = -scanner.nextDouble();
+            } else if (input.equalsIgnoreCase("Credit")) {
+                type = "Credit";
+                System.out.print("Enter amount: ");
+                amount = scanner.nextDouble();
+            } else {
+                System.out.println("Invalid type. Please enter 'Debit' or 'Credit'.");
+            }
+            scanner.nextLine();
+        }
+
+        System.out.print("Enter description: ");
+        String description = scanner.nextLine();
+        
+        addTransaction(date, amount, type, description);
+        System.out.println("Transaction added successfully!");
+    }
+    
+    private void simulatePdfUpload() {
+        System.out.println("\n--- PDF Upload ---");
+        System.out.println("Parsing PDF and extracting data...");
+        System.out.println("Simulating extraction of 3 transactions...");
+        
+        System.out.println("Transactions from PDF have been added.");
+    }
+}
